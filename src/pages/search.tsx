@@ -60,7 +60,7 @@ export default () => {
   const inBrowser = typeof document !== "undefined"
 
   // Debounce the query to reduce number of searches
-  const deferredQuery = useDebouncedValue(ctx.query, 150)
+  const query = useDebouncedValue(ctx.query, 150)
 
   // Initialize query from URL on mount
   useEffect(() => {
@@ -85,16 +85,18 @@ export default () => {
   useEffect(() => {
     if (ctx.searchables !== null) {
       // Filter and sort the results.
-      if (!deferredQuery) {
+      if (!query) {
         setResults([])
+        ctx.setFirstResultHref(null)
         return
       }
 
       // Setup for scoring.
-      const queryLower = deferredQuery.toLowerCase().trim()
+      const queryLower = query.toLowerCase().trim()
       const queryClean = queryLower.replace(/[()[\]]/g, "")
       if (queryClean.length < 2) {
         setResults([])
+        ctx.setFirstResultHref(null)
         return
       }
       const queryRegexp = prepScoring(queryClean)
@@ -109,8 +111,10 @@ export default () => {
       }
       scored.sort((a, b) => a.score - b.score)
       setResults(scored)
+      // Update first result href for Enter key navigation
+      ctx.setFirstResultHref(scored.length > 0 ? scored[0].href : null)
     }
-  }, [deferredQuery, ctx.searchables])
+  }, [query, ctx.searchables])
 
   return (
     <Layout pageTitle="Buddy's Almanac">

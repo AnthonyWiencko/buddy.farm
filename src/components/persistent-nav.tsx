@@ -145,6 +145,10 @@ export const PersistentNav = ({ children }: PersistentNavProps) => {
             css={{ flexGrow: 1, maxWidth: 600 }}
             onSubmit={(evt) => {
               evt.preventDefault()
+              // Navigate to first result on Enter key press
+              if (ctx.firstResultHref) {
+                void navigate(ctx.firstResultHref)
+              }
             }}
           >
             <input
