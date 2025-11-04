@@ -1,5 +1,7 @@
 import "bootstrap/dist/css/bootstrap.css"
 import "bootstrap-dark-5/dist/css/bootstrap-nightshade.css"
+import "react-bootstrap-typeahead/css/Typeahead.css"
+import "react-bootstrap-typeahead/css/Typeahead.bs5.css"
 
 import { navigate } from "gatsby"
 import React, { useContext, useEffect, useRef, useState } from "react"
@@ -72,6 +74,13 @@ export const PersistentNav = ({ children }: PersistentNavProps) => {
     if (isNavigatingRef.current && inputRef.current) {
       // Immediately refocus to prevent keyboard from closing
       inputRef.current.focus()
+    }
+  }
+
+  const handleSettingsClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== 'undefined' && window.location.pathname === '/settings/') {
+      evt.preventDefault()
+      void navigate(-1)
     }
   }
 
@@ -153,7 +162,7 @@ export const PersistentNav = ({ children }: PersistentNavProps) => {
               onBlur={handleBlur}
             />
           </form>
-          <Link className="btn btn-primary" to="/settings/">
+          <Link className="btn btn-primary" to="/settings/" onClick={handleSettingsClick}>
             <span className="d-none d-sm-inline">Settings</span>
             <BsFillGearFill className="d-sm-none" css={{ marginTop: -3 }} />
           </Link>
